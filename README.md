@@ -172,5 +172,3 @@ It is a structured intelligence engine designed to extract startup signals for:
 
 Built by Naol — AI-focused mobile + systems engineer exploring Agentic architectures and applied intelligence systems.
 
-
-
