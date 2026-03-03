@@ -7,7 +7,6 @@ A lightweight, production-ready Agentic RAG (Retrieval-Augmented Generation) ser
 Built with:
 
  • FastAPI
-
  • FAISS (vector search) 
  
  • Sentence Transformers 
