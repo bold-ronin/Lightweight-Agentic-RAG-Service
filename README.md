@@ -49,14 +49,10 @@ FastAPI Response
 
 
 ### Core Components:
- • embedding_service.py → Generates sentence embeddings
- 
- • vector_store.py → FAISS index + persistence
- 
- • retrieval_service.py → Semantic retrieval logic
- 
- • llm_service.py → Groq structured JSON generation
- 
+ • embedding_service.py → Generates sentence embeddings  
+ • vector_store.py → FAISS index + persistence  
+ • retrieval_service.py → Semantic retrieval logic  
+ • llm_service.py → Groq structured JSON generation  
  • main.py → FastAPI endpoints
 
 
