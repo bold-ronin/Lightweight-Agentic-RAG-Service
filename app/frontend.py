@@ -577,76 +577,123 @@ query = st.text_input(
 )
 
 # ----------- Analyze Button -----------
-
-if st.button("Analyze Leads"):
-
+if analyze_btn: # Or st.button("Analyze Leads")
     if query:
-
-        with st.spinner("AI agent scanning vector database and live web..."):
-
+        with st.status("🔍 Agent scanning for demand signals...", expanded=True) as status:
             try:
-
                 response = requests.post(
-                    "https://agentic-lead-rag.onrender.com/analyze",
-                    json={"text": query}
+                    "https://onrender.com", 
+                    json={"text": query},
+                    timeout=60
                 )
-
-                data = response.json()
-
+                
                 if response.status_code == 200:
-
+                    status.update(label="✅ Demand Intelligence Found", state="complete", expanded=False)
+                    data = response.json()
                     analysis = data["analysis"]
+                    
+                    # --- NEW B2B AI DASHBOARD UI ---
+                    st.subheader(f"🎯 Target: {analysis.get('prospect_name', 'Unknown Prospect')}")
+                    
+                    # Metrics Row for Growth Signals
+                    m1, m2, m3, m4 = st.columns(4)
+                    m1.metric("Pain Score", f"{analysis.get('vocal_pain_score', 0)}/100")
+                    m2.metric("Priority", "🔥 HIGH" if analysis.get("high_priority") else "Low")
+                    m3.metric("Platform", analysis.get("platform_source", "Unknown"))
+                    m4.metric("Early Stage", "Yes ✅" if analysis.get("is_early_stage") else "No")
 
-                    col1, col2, col3, col4 = st.columns(4)
+                    # The Pain Point
+                    st.error(f"**Identified Pain:** {analysis.get('pain_point', 'No pain point detected.')}")
 
-                    with col1:
-                        st.metric(
-                            label="Startup",
-                            value=analysis.get("startup_name", "Unknown")
-                        )
+                    # The "Million Dollar" Pitch Angle
+                    st.markdown("### ⚡ Your Day 1 Outreach Strategy")
+                    st.success(analysis.get("pitch_angle", "No strategy generated."))
+                    
+                    st.info(f"**Recommended Hook:** {analysis.get('recommended_hook', 'N/A')}")
 
-                    with col2:
-                        st.metric(
-                            label="Funding",
-                            value=analysis.get("funding_stage", "N/A")
-                        )
-
-                    with col3:
-
-                        signal = "High" if analysis.get("hiring_signal") else "Low"
-
-                        st.metric(
-                            label="Hiring Signal",
-                            value=signal
-                        )
-
-                    with col4:
-
-                        remote = "Yes" if analysis.get("remote_possible") else "No"
-
-                        st.metric(
-                            label="Remote",
-                            value=remote
-                        )
-
-                    st.write("")
-
-                    st.info(
-                        f"**AI Reasoning:** {analysis.get('reasoning')}"
-                    )
-
+                    # Action and Source
                     if analysis.get("source_url") and analysis["source_url"] != "Unknown":
-                        st.link_button("Open Source", analysis["source_url"])
-
-                    with st.expander("Retrieved Context"):
-                        for chunk in data["context_used"]:
-                            st.write(chunk)
-
+                        st.link_button("Go to Post/Source", analysis["source_url"], use_container_width=True)
+                    
+                    # Context used for the RAG
+                    with st.expander("🛠️ Raw Data Scanned"):
+                        for chunk in data.get("context_used", []):
+                            st.write(f"- {chunk}")
+                
                 else:
-                    st.error(data.get("detail", "Unknown error"))
-
+                    st.error(f"Backend Error {response.status_code}: {response.text}")
             except Exception as e:
-                st.error(f"Backend connection failed: {e}")
+                st.error(f"Connection Error: {e}")
 
-    else:
-        st.warning("Please enter a query.")
+# if st.button("Analyze Leads"):
+
+#     if query:
+
+#         with st.spinner("AI agent scanning vector database and live web..."):
+
+#             try:
+
+#                 response = requests.post(
+#                     "https://agentic-lead-rag.onrender.com/analyze",
+#                     json={"text": query}
+#                 )
+
+#                 data = response.json()
+
+#                 if response.status_code == 200:
+
+#                     analysis = data["analysis"]
+
+#                     col1, col2, col3, col4 = st.columns(4)
+
+#                     with col1:
+#                         st.metric(
+#                             label="Startup",
+#                             value=analysis.get("startup_name", "Unknown")
+#                         )
+
+#                     with col2:
+#                         st.metric(
+#                             label="Funding",
+#                             value=analysis.get("funding_stage", "N/A")
+#                         )
+
+#                     with col3:
+
+#                         signal = "High" if analysis.get("hiring_signal") else "Low"
+
+#                         st.metric(
+#                             label="Hiring Signal",
+#                             value=signal
+#                         )
+
+#                     with col4:
+
+#                         remote = "Yes" if analysis.get("remote_possible") else "No"
+
+#                         st.metric(
+#                             label="Remote",
+#                             value=remote
+#                         )
+
+#                     st.write("")
+
+#                     st.info(
+#                         f"**AI Reasoning:** {analysis.get('reasoning')}"
+#                     )
+
+#                     if analysis.get("source_url") and analysis["source_url"] != "Unknown":
+#                         st.link_button("Open Source", analysis["source_url"])
+
+#                     with st.expander("Retrieved Context"):
+#                         for chunk in data["context_used"]:
+#                             st.write(chunk)
+
+#                 else:
+#                     st.error(data.get("detail", "Unknown error"))
+
+#             except Exception as e:
+#                 st.error(f"Backend connection failed: {e}")
+
+#     else:
+#         st.warning("Please enter a query.")
