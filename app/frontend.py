@@ -577,43 +577,48 @@ query = st.text_input(
 )
 
 # ----------- Analyze Button -----------
-if st.button("Analyze Leads"):
-
+if st.button("Analyze Leads", type="primary"):
     if query:
-
-        with st.spinner("AI agent scanning vector database and live web..."):
-
+        with st.spinner("AI agent scanning for demand signals..."):
             try:
-
+                # Use the correct URL - verify if it needs "-gui" or not
                 response = requests.post(
                     "https://agentic-lead-rag.onrender.com/analyze",
                     json={"text": query}
                 )
-                    timeout=60
-                )
                 
                 if response.status_code == 200:
-                    status.update(label="✅ Demand Intelligence Found", state="complete", expanded=False)
                     data = response.json()
-                    analysis = data["analysis"]
-                    
-                    # --- NEW B2B AI DASHBOARD UI ---
-                    st.subheader(f"🎯 Target: {analysis.get('prospect_name', 'Unknown Prospect')}")
-                    
-                    m1, m2, m3, m4 = st.columns(4)
-                    m1.metric("Pain Score", f"{analysis.get('vocal_pain_score', 0)}/100")
-                    m2.metric("Priority", "🔥 HIGH" if analysis.get("high_priority") else "Low")
-                    m3.metric("Platform", analysis.get("platform_source", "Unknown"))
-                    m4.metric("Early Stage", "Yes ✅" if analysis.get("is_early_stage") else "No")
+                    analysis = data.get("analysis", {})
 
-                    st.error(f"**Identified Pain:** {analysis.get('pain_point', 'No pain point detected.')}")
-                    st.success(f"**Pitch Strategy:** {analysis.get('pitch_angle', 'No strategy generated.')}")
-                    st.info(f"**Hook:** {analysis.get('recommended_hook', 'N/A')}")
+                    # Metrics Row - using the NEW keys from your prompt
+                    col1, col2, col3, col4 = st.columns(4)
+                    with col1:
+                        st.metric("Prospect", analysis.get("prospect_name", "Unknown"))
+                    with col2:
+                        st.metric("Pain Score", f"{analysis.get('vocal_pain_score', 0)}/100")
+                    with col3:
+                        priority = "🔥 High" if analysis.get("high_priority") else "Normal"
+                        st.metric("Priority", priority)
+                    with col4:
+                        st.metric("Platform", analysis.get("platform_source", "Web"))
+
+                    st.write("")
+                    
+                    # New Demand-focused Display
+                    st.error(f"**Identified Pain:** {analysis.get('pain_point', 'N/A')}")
+                    st.success(f"**Pitch Strategy:** {analysis.get('pitch_angle', 'N/A')}")
+                    st.info(f"**Personalized Hook:** {analysis.get('recommended_hook', 'N/A')}")
 
                     if analysis.get("source_url") and analysis["source_url"] != "Unknown":
-                        st.link_button("Go to Post/Source", analysis["source_url"], use_container_width=True)
-                else:
-                    st.error(f"Backend Error {response.status_code}: {response.text}")
-            except Exception as e:
-                st.error(f"Connection Error: {e}")
+                        st.link_button("Open Source Signal", analysis["source_url"])
 
+                    with st.expander("Retrieved Context"):
+                        for chunk in data.get("context_used", []):
+                            st.write(chunk)
+                else:
+                    st.error(f"Backend Error: {response.status_code}")
+            except Exception as e:
+                st.error(f"Backend connection failed: {e}")
+    else:
+        st.warning("Please enter a query.")
