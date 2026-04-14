@@ -577,16 +577,18 @@ query = st.text_input(
 )
 
 # ----------- Analyze Button -----------
-analyze_btn = st.button("Analyze Leads", type="primary", use_container_width=True)
+if st.button("Analyze Leads"):
 
-if analyze_btn:
     if query:
-        with st.status("🔍 Agent scanning for demand signals...", expanded=True) as status:
+
+        with st.spinner("AI agent scanning vector database and live web..."):
+
             try:
-                # FIXED: Added proper closing parenthesis and indentation
+
                 response = requests.post(
-                    "https://agentic-lead-rag-gui.onrender.com/analyze", 
-                    json={"text": query},
+                    "https://agentic-lead-rag.onrender.com/analyze",
+                    json={"text": query}
+                )
                     timeout=60
                 )
                 
