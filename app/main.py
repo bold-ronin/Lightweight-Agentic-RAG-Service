@@ -47,7 +47,8 @@ async def analyze(request: AnalyzeRequest):
         
         # Combine Context
         all_chunks = local_chunks + web_chunks
-        context = "\n".join(all_chunks)
+        # context = "\n".join(all_chunks)
+        context = "\n".join(all_chunks[:3]) 
 
         # Groq LLM Generation
         raw_answer = await generate_answer(context, request.text)
