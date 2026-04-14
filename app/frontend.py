@@ -577,12 +577,15 @@ query = st.text_input(
 )
 
 # ----------- Analyze Button -----------
-if analyze_btn: # Or st.button("Analyze Leads")
+analyze_btn = st.button("Analyze Leads", type="primary", use_container_width=True)
+
+if analyze_btn:
     if query:
         with st.status("🔍 Agent scanning for demand signals...", expanded=True) as status:
             try:
+                # FIXED: Added proper closing parenthesis and indentation
                 response = requests.post(
-                    "https://agentic-lead-rag.onrender.com/analyze", 
+                    "https://agentic-lead-rag-gui.onrender.com/analyze", 
                     json={"text": query},
                     timeout=60
                 )
@@ -595,31 +598,18 @@ if analyze_btn: # Or st.button("Analyze Leads")
                     # --- NEW B2B AI DASHBOARD UI ---
                     st.subheader(f"🎯 Target: {analysis.get('prospect_name', 'Unknown Prospect')}")
                     
-                    # Metrics Row for Growth Signals
                     m1, m2, m3, m4 = st.columns(4)
                     m1.metric("Pain Score", f"{analysis.get('vocal_pain_score', 0)}/100")
                     m2.metric("Priority", "🔥 HIGH" if analysis.get("high_priority") else "Low")
                     m3.metric("Platform", analysis.get("platform_source", "Unknown"))
                     m4.metric("Early Stage", "Yes ✅" if analysis.get("is_early_stage") else "No")
 
-                    # The Pain Point
                     st.error(f"**Identified Pain:** {analysis.get('pain_point', 'No pain point detected.')}")
+                    st.success(f"**Pitch Strategy:** {analysis.get('pitch_angle', 'No strategy generated.')}")
+                    st.info(f"**Hook:** {analysis.get('recommended_hook', 'N/A')}")
 
-                    # The "Million Dollar" Pitch Angle
-                    st.markdown("### ⚡ Your Day 1 Outreach Strategy")
-                    st.success(analysis.get("pitch_angle", "No strategy generated."))
-                    
-                    st.info(f"**Recommended Hook:** {analysis.get('recommended_hook', 'N/A')}")
-
-                    # Action and Source
                     if analysis.get("source_url") and analysis["source_url"] != "Unknown":
                         st.link_button("Go to Post/Source", analysis["source_url"], use_container_width=True)
-                    
-                    # Context used for the RAG
-                    with st.expander("🛠️ Raw Data Scanned"):
-                        for chunk in data.get("context_used", []):
-                            st.write(f"- {chunk}")
-                
                 else:
                     st.error(f"Backend Error {response.status_code}: {response.text}")
             except Exception as e:
