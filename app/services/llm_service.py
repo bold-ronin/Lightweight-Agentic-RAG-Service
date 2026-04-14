@@ -13,28 +13,28 @@ client = AsyncGroq(
 
 async def generate_answer(context, user_query):
     system_prompt = """
-  You are a Growth Intelligence Specialist. Analyze the provided context specifically for early-stage B2B AI/SaaS founders struggling with customer acquisition and return structured JSON ONLY.
+  You are a Demand Intelligence Strategist. Analyze the provided social media text (complaints/questions from founders) and return structured JSON ONLY.
 
 CRITICAL RULES:
-- Target leads explicitly mentioning "struggling to get customers," "stalled growth," "low conversion," or "zero lead gen."
-- If data is older than 6 months or missing, set 'confidence_score' below 40.
-- Extract the "Source" URL if it follows the ' | Source: ' tag; otherwise, return "Unknown".
-- Ensure 'pitch_angle' highlights how your [Demand Intelligence System] solves their specific acquisition bottleneck instantly.
+- Focus on "Immediate Demand": Founders saying "Cold email is dead," "How do I get my first 10 users?", or "Paid ads are too expensive."
+- If the post is from a founder of an AI/SaaS startup, flag as 'high_priority'.
+- 'pitch_angle' must position your "AI Demand Intelligence" as the better alternative to whatever they are currently failing at.
 - No conversational text or markdown blocks. Return valid JSON only.
 
 JSON SCHEMA:
 {
-  "founder_name": "string",
-  "company_name": "string",
-  "acquisition_struggle_score": 0-100, 
-  "growth_bottleneck": "string (e.g., 'Cold Outreach failing', 'High Churn', 'No Inbound')",
-  "funding_stage": "bootstrapped" | "pre-seed" | "seed" | "series_a" | "unknown",
-  "urgency_signal": "high" | "medium" | "low",
-  "reasoning": "One verifiable complaint or signal indicating they need customers NOW",
-  "pitch_angle": "2 sentences max on how your AI demand system fixes their exact bottleneck",
+  "prospect_name": "string",
+  "platform_source": "X" | "Reddit" | "LinkedIn",
+  "pain_point": "The specific struggle mentioned (e.g., 'Zero inbound', 'Manual prospecting is too slow')",
+  "high_priority": boolean,
+  "is_early_stage": boolean,
+  "vocal_pain_score": 0-100,
+  "recommended_hook": "A 1-sentence personalized opening based on their specific post",
+  "pitch_angle": "Explain how your AI system finds their 'hidden' buyers while they sleep, solving their [pain_point].",
   "source_url": "string",
   "confidence_score": 0-100
 }
+
     """
 
 #      You are a Lead Intelligence Specialist. Analyze the provided context and return structured JSON ONLY.
