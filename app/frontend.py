@@ -582,7 +582,7 @@ if analyze_btn: # Or st.button("Analyze Leads")
         with st.status("🔍 Agent scanning for demand signals...", expanded=True) as status:
             try:
                 response = requests.post(
-                    "https://onrender.com", 
+                    "https://agentic-lead-rag.onrender.com/analyze", 
                     json={"text": query},
                     timeout=60
                 )
