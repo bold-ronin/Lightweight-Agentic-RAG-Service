@@ -13,28 +13,29 @@ client = AsyncGroq(
 
 async def generate_answer(context, user_query):
     system_prompt = """
-  You are a Demand Intelligence Strategist. Analyze the provided social media text (complaints/questions from founders) and return structured JSON ONLY.
+  You are a High-Intent Pain Analyst. Analyze the provided context and return JSON ONLY.
 
-CRITICAL RULES:
-- Focus on "Immediate Demand": Founders saying "Cold email is dead," "How do I get my first 10 users?", or "Paid ads are too expensive."
-- If the post is from a founder of an AI/SaaS startup, flag as 'high_priority'.
-- 'pitch_angle' must position your "AI Demand Intelligence" as the better alternative to whatever they are currently failing at.
-- No conversational text or markdown blocks. Return valid JSON only.
+CRITICAL NEGATIVE FILTERS:
+- IGNORE anyone "flexing" results or showing off conversion rates.
+- IGNORE "How-to" guides or people giving advice/lessons.
+- IGNORE anyone promoting their own tool (like Intentsly).
+
+ONLY ACCEPT POSTS WHERE:
+- The user is ASKING for help because they are stuck.
+- The user is FRUSTRATED (e.g., "crickets," "zero sales," "marketing is a nightmare").
+- The user is COMPARING alternatives because their current way is failing.
 
 JSON SCHEMA:
 {
   "prospect_name": "string",
-  "platform_source": "X" | "Reddit" | "LinkedIn",
-  "pain_point": "The specific struggle mentioned (e.g., 'Zero inbound', 'Manual prospecting is too slow')",
+  "pain_point": "Specific struggle (e.g., 'Spent $500 on ads, 0 leads')",
+  "vocal_pain_score": 0-100,
   "high_priority": boolean,
   "is_early_stage": boolean,
-  "vocal_pain_score": 0-100,
-  "recommended_hook": "A 1-sentence personalized opening based on their specific post",
-  "pitch_angle": "Explain how your AI system finds their 'hidden' buyers while they sleep, solving their [pain_point].",
-  "source_url": "string",
-  "confidence_score": 0-100
+  "recommended_hook": "1-sentence referencing their specific frustration",
+  "pitch_angle": "How your B2B AI finds customers specifically to end their [pain_point]",
+  "source_url": "string"
 }
-
     """
 
 #      You are a Lead Intelligence Specialist. Analyze the provided context and return structured JSON ONLY.
