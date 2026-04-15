@@ -1,17 +1,6 @@
 Early-stage startup raised seed round, hiring Flutter developer. | https://x.com
-Indie hacker validating idea using landing page and waiting list. | https://indiehackers.com
-Series A Fintech startup in London hiring Senior React Native dev. | https://fintech.io
-HealthTech company just closed $10M, building AI diagnostics team. | https://crunchbase.com
-E-commerce brand needs Shopify expert for headless migration. | https://shopify.com
-Web3 startup looking for Rust developer for smart contract audit. | https://github.com
-EdTech platform expanding to LATAM, hiring content creators. | https://remoteok.com
 PropTech firm hiring a remote Project Manager for UK operations. | https://weworkremotely.com
-MusicTech startup hiring a Product Manager for streaming app. | https://apple.com
-ConstructionTech firm looking for a Sales Development Rep. | https://hubspot.com
-EventTech company needs a React developer for dashboard. | https://eventbrite.com
-PetTech startup raised Seed, hiring a Marketing Manager. | https://pettech.com
 AR/VR studio looking for a Three.js developer for web experience. | https://threejs.org
 WealthTech firm looking for a Compliance Officer. | https://wealthtech.io
-SportsTech app needs a Swift developer for Apple Watch integration. | https://swift.org
+SportsTech app looking for a Swift developer for Apple Watch integration. | https://swift.org
 Zero-waste startup searching for a Supply Chain Coordinator. | https://zerowaste.org
-API-first startup hiring a Developer Advocate for documentation. | https://postman.com
